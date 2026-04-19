@@ -1,6 +1,16 @@
 # x-ray-denoiser
 X-Ray denoising experiment comparing U-Net and Transformer based architectures.
 
+## Environment setup
+
+Create and activate a virtual environment, then install dependencies:
+
+```bash
+/usr/bin/python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
 ## File structure
 
 ```
