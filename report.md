@@ -108,3 +108,8 @@ Furthermore, raw noise reduction does not automatically equate to a successful m
 
 **Future Work (Task-Aware Denoising):**
 To ensure diagnostic safety, future iterations must implement structure-preserving metrics (such as SSIM) rather than relying solely on pixel-wise differences. A highly promising avenue for future development is to couple the denoising network with a pre-trained disease classification model. By utilizing the classifier's feature maps to compute a "perceptual loss" or task-aware loss, the system could receive feedback to ensure that the denoising process actively preserves the specific anatomical textures and structures required for accurate pathology classification.
+
+## 10. References
+
+1. Olaf Ronneberger, Philipp Fischer, and Thomas Brox. *U-Net: Convolutional Networks for Biomedical Image Segmentation*. MICCAI 2015. https://arxiv.org/abs/1505.04597
+2. Ozan Oktay, Jo Schlemper, Loic Le Folgoc, et al. *Attention U-Net: Learning Where to Look for the Pancreas*. arXiv 2018. https://arxiv.org/abs/1804.03999

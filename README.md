@@ -73,3 +73,8 @@ x-ray-denoiser/
         ├── attention_unet.py  # Attention U-Net variant
         └── transformer.py  # Transformer-based denoising model
 ```
+
+## References
+
+1. Olaf Ronneberger, Philipp Fischer, and Thomas Brox. *U-Net: Convolutional Networks for Biomedical Image Segmentation*. MICCAI 2015. https://arxiv.org/abs/1505.04597
+2. Ozan Oktay, Jo Schlemper, Loic Le Folgoc, et al. *Attention U-Net: Learning Where to Look for the Pancreas*. arXiv 2018. https://arxiv.org/abs/1804.03999
