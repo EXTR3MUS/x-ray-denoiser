@@ -4,6 +4,7 @@ from pathlib import Path
 import torch
 import matplotlib.pyplot as plt
 from torch.utils.data import DataLoader, random_split
+from torchmetrics.image import PeakSignalNoiseRatio
 
 from dataset import NIHDenoisingDataset
 from models.unet import UNet
@@ -46,7 +47,7 @@ def resolve_checkpoint(explicit_name: str | None, pattern: str) -> Path:
     return candidates[-1]
 
 
-def save_model_comparison_grid(noisy, base_denoised, att_denoised, clean, num_images=4, save_path="model_comparison.png"):
+def save_model_comparison_grid(noisy, base_denoised, att_denoised, clean, base_psnrs=None, att_psnrs=None, num_images=4, save_path="model_comparison.png"):
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     fig, axes = plt.subplots(num_images, 4, figsize=(16, 4 * num_images))
     
@@ -64,12 +65,18 @@ def save_model_comparison_grid(noisy, base_denoised, att_denoised, clean, num_im
 
         # 2. Baseline U-Net
         axes[i, 1].imshow(b_img, cmap='gray', vmin=0, vmax=1)
-        axes[i, 1].set_title("Baseline U-Net")
+        base_title = "Baseline U-Net"
+        if base_psnrs is not None:
+            base_title += f"\nPSNR: {base_psnrs[i]:.2f} dB"
+        axes[i, 1].set_title(base_title)
         axes[i, 1].axis('off')
 
         # 3. Attention U-Net
         axes[i, 2].imshow(a_img, cmap='gray', vmin=0, vmax=1)
-        axes[i, 2].set_title("Attention U-Net")
+        att_title = "Attention U-Net"
+        if att_psnrs is not None:
+            att_title += f"\nPSNR: {att_psnrs[i]:.2f} dB"
+        axes[i, 2].set_title(att_title)
         axes[i, 2].axis('off')
 
         # 4. Ground Truth
@@ -82,6 +89,7 @@ def save_model_comparison_grid(noisy, base_denoised, att_denoised, clean, num_im
     plt.savefig(output_path)
     plt.close()
     print(f"Comparison grid saved to {output_path}")
+
 
 def main():
     print(f"Loading models on {DEVICE}...")
@@ -118,11 +126,22 @@ def main():
     test_loader = DataLoader(test_dataset, batch_size=4, shuffle=True)
     noisy_imgs, clean_imgs = next(iter(test_loader))
     noisy_imgs = noisy_imgs.to(DEVICE)
+    clean_imgs = clean_imgs.to(DEVICE)
 
     print("Running inference on both models...")
     with torch.no_grad():
         base_outputs = model_base(noisy_imgs)
         att_outputs = model_att(noisy_imgs)
+
+    # Calculate PSNR per image for the batch
+    print("Calculating PSNR metrics...")
+    psnr_metric = PeakSignalNoiseRatio(data_range=1.0).to(DEVICE)
+    base_psnrs = []
+    att_psnrs = []
+    
+    for i in range(4):
+        base_psnrs.append(psnr_metric(base_outputs[i:i+1], clean_imgs[i:i+1]).item())
+        att_psnrs.append(psnr_metric(att_outputs[i:i+1], clean_imgs[i:i+1]).item())
 
     save_name = f"model_comparison_{baseline_model_name}_vs_{attention_model_name}__{run_time_suffix}.png"
     save_model_comparison_grid(
@@ -130,6 +149,8 @@ def main():
         base_outputs,
         att_outputs,
         clean_imgs,
+        base_psnrs=base_psnrs,
+        att_psnrs=att_psnrs,
         num_images=4,
         save_path=save_name,
     )
