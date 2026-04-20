@@ -5,6 +5,7 @@ numpy
 scipy
 pillow
 matplotlib
+PyQt5
 scikit-image
 tqdm
 opencv-python
