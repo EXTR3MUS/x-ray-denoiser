@@ -208,7 +208,6 @@ __marimo__/
 
 # Project data and outputs
 data/
-images/
 checkpoints/
 logs/
 models_checkpoints/

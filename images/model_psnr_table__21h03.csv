@@ -1,0 +1,3 @@
+Model,Mean PSNR (dB),Std PSNR (dB)
+attention_unet,32.5686,1.2365
+unet_baseline,29.0351,1.6449
