@@ -211,3 +211,6 @@ data/
 images/
 checkpoints/
 logs/
+models_checkpoints/
+*.pth
+*:Zone.Identifier
