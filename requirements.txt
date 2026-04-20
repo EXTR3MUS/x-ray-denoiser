@@ -1,6 +1,7 @@
 torch
 torchvision
 torchaudio
+torchmetrics
 numpy
 scipy
 pillow

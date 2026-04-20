@@ -17,6 +17,14 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
+## Download pretrained checkpoints (GitHub Releases)
+
+1. Open the Releases section of this GitHub repository.
+2. Download the checkpoint file you want to use (for example: `attention_unet__20h21.pth` or `unet_baseline.pth`).
+3. Place the downloaded `.pth` file inside `models_checkpoints/` as shown in the folder structure below.
+
+If `models_checkpoints/` does not exist locally yet, create it and then copy the checkpoint file there.
+
 ## Run training
 
 Run from the repository root:
@@ -41,6 +49,7 @@ python src/inference.py
 Notes:
 - The current `src/inference.py` loads `AttentionUNet` and auto-selects the latest `attention_unet*.pth` checkpoint unless `CHECKPOINT_NAME` is set.
 - Inference comparison grids are saved into `images/`.
+- Ensure your downloaded checkpoint is inside `models_checkpoints/` before running inference.
 
 ## File structure
 
